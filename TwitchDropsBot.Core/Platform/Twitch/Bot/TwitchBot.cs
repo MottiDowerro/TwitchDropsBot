@@ -425,10 +425,11 @@ public class TwitchBot : BaseBot<TwitchUser>
 
             previousMinuteWatched = minuteWatched;
 
+            var waitTime = TimeSpan.FromSeconds(_botSettings.CurrentValue.GetWatchCheckIntervalSeconds(20));
             Logger.LogInformation(
-                $"Waiting 20 seconds... {minuteWatched}/{requiredMinutesToWatch} minutes watched.");
+                $"Waiting {waitTime.TotalSeconds:F0} seconds... {minuteWatched}/{requiredMinutesToWatch} minutes watched.");
 
-            await Task.Delay(TimeSpan.FromSeconds(20));
+            await Task.Delay(waitTime);
         }
 
         BotUser.WatchManager.Close();

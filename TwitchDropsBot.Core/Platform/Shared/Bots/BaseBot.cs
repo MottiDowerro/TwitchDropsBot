@@ -32,7 +32,7 @@ public abstract class BaseBot<TUser> where TUser : BotUser
 
     public async Task StartBot()
     {
-        TimeSpan waitingTime = TimeSpan.FromSeconds(BotSettings.CurrentValue.WaitingSeconds);
+        TimeSpan waitingTime = TimeSpan.FromSeconds(BotSettings.CurrentValue.GetWaitingSeconds());
         
         while(true)
         {
@@ -44,20 +44,20 @@ public abstract class BaseBot<TUser> where TUser : BotUser
             catch (NoBroadcasterOrNoCampaignLeft ex)
             {
                 Logger.LogDebug(ex.Message);
-                Logger.LogDebug($"Waiting {BotSettings.CurrentValue.WaitingSeconds} seconds before trying again.");
-                waitingTime = TimeSpan.FromSeconds(BotSettings.CurrentValue.WaitingSeconds);
+                waitingTime = TimeSpan.FromSeconds(BotSettings.CurrentValue.GetWaitingSeconds());
+                Logger.LogDebug($"Waiting {waitingTime.TotalSeconds:F0} seconds before trying again.");
             }
             catch (StreamOffline ex)
             {
                 Logger.LogDebug(ex.Message);
-                Logger.LogDebug($"Waiting {BotSettings.CurrentValue.WaitingSeconds} seconds before trying again.");
-                waitingTime = TimeSpan.FromSeconds(BotSettings.CurrentValue.WaitingSeconds);
+                waitingTime = TimeSpan.FromSeconds(BotSettings.CurrentValue.GetWaitingSeconds());
+                Logger.LogDebug($"Waiting {waitingTime.TotalSeconds:F0} seconds before trying again.");
             }
             catch (CurrentDropSessionChanged ex)
             {
                 Logger.LogDebug(ex.Message);
-                Logger.LogDebug($"Waiting {BotSettings.CurrentValue.WaitingSeconds} seconds before trying again.");
-                waitingTime = TimeSpan.FromSeconds(BotSettings.CurrentValue.WaitingSeconds);
+                waitingTime = TimeSpan.FromSeconds(BotSettings.CurrentValue.GetWaitingSeconds());
+                Logger.LogDebug($"Waiting {waitingTime.TotalSeconds:F0} seconds before trying again.");
             }
             catch (OperationCanceledException ex)
             {
@@ -80,7 +80,7 @@ public abstract class BaseBot<TUser> where TUser : BotUser
                     });
                 }
         
-                waitingTime = TimeSpan.FromSeconds(BotSettings.CurrentValue.WaitingSeconds);
+                waitingTime = TimeSpan.FromSeconds(BotSettings.CurrentValue.GetWaitingSeconds());
             }
         
             BotUser.Close();

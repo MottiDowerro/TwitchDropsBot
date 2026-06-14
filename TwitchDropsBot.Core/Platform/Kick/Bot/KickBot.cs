@@ -94,7 +94,10 @@ public class KickBot : BaseBot<KickUser>
         {
             Logger.LogInformation("Trying to init the drop...");
             await BotUser.WatchManager.WatchStreamAsync(broadcaster, campaign.Category);
-            await Task.Delay(TimeSpan.FromSeconds(60));
+            
+            var waitTime = TimeSpan.FromSeconds(BotSettings.CurrentValue.GetWatchCheckIntervalSeconds(60));
+            await Task.Delay(waitTime);
+            
             summary = await BotUser.KickRepository.GetSummary(campaign);
         }
 
@@ -152,10 +155,11 @@ public class KickBot : BaseBot<KickUser>
 
             previousMinuteWatched = minuteWatched;
 
+            var waitTime = TimeSpan.FromSeconds(BotSettings.CurrentValue.GetWatchCheckIntervalSeconds(60));
             Logger.LogInformation(
-                $"Waiting 60 seconds... {minuteWatched}/{requiredMinutesToWatch} minutes watched.");
+                $"Waiting {waitTime.TotalSeconds:F0} seconds... {minuteWatched}/{requiredMinutesToWatch} minutes watched.");
 
-            await Task.Delay(TimeSpan.FromSeconds(60));
+            await Task.Delay(waitTime);
         }
 
         BotUser.WatchManager.Close();
