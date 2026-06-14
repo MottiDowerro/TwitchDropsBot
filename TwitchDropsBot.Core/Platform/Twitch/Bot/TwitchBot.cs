@@ -381,7 +381,9 @@ public class TwitchBot : BaseBot<TwitchUser>
             {
                 BotUser.WatchManager.Close();
                 await BotUser.WatchManager.WatchStreamAsync(broadcaster, campaign.Game);
-                await Task.Delay(TimeSpan.FromSeconds(20));
+                
+                var waitTime = TimeSpan.FromSeconds(_botSettings.CurrentValue.GetWatchCheckIntervalSeconds(20));
+                await Task.Delay(waitTime);
 
                 var newDropCurrentSession =
                     await BotUser.TwitchRepository.FetchCurrentSessionContextAsync(broadcaster);
@@ -783,4 +785,5 @@ public class TwitchBot : BaseBot<TwitchUser>
 
         claimedReward = newClaimedReward;
     }
+}
 }
