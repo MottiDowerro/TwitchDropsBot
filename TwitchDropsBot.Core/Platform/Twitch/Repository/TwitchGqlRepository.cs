@@ -84,7 +84,7 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
 
             foreach (var dropCampaign in dropCampaigns)
             {
-                if (favGamesSet.Contains(dropCampaign.Game.DisplayName.ToLower()))
+                if (favGamesSet.Contains(dropCampaign.Game!.DisplayName?.ToLower() ?? ""))
                 {
                     dropCampaign.Game.IsFavorite = true;
                 }
@@ -92,7 +92,7 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
 
             foreach (var rewardCampaign in rewardCampaigns)
             {
-                if (favGamesSet.Contains(rewardCampaign.Game.DisplayName.ToLower()))
+                if (favGamesSet.Contains(rewardCampaign.Game!.DisplayName?.ToLower() ?? ""))
                 {
                     rewardCampaign.Game.IsFavorite = true;
                 }
@@ -100,7 +100,7 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
 
             campaigns.AddRange(dropCampaigns);
 
-            rewardCampaigns = rewardCampaigns.OrderBy(x => x.UnlockRequirements.MinuteWatchedGoal).ToList();
+            rewardCampaigns = rewardCampaigns.OrderBy(x => x.UnlockRequirements!.MinuteWatchedGoal).ToList();
 
             campaigns.AddRange(rewardCampaigns);
 
@@ -156,7 +156,12 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
 
         Inventory? inventory = resp?.Data.CurrentUser.Inventory;
 
-        if (inventory?.DropCampaignsInProgress is null)
+        if (inventory is null)
+        {
+            return null;
+        }
+
+        if (inventory.DropCampaignsInProgress is null)
         {
             inventory.DropCampaignsInProgress = new List<DropCampaign>();
         }
@@ -314,7 +319,7 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
         
         dynamic? resp = await DoGQLRequestAsync(query);
 
-        List<DropsCampaign> channelDropCampaignsProgress = resp?.Data.ChannelDropCampaignsProgress;
+        List<DropsCampaign>? channelDropCampaignsProgress = resp?.Data.ChannelDropCampaignsProgress;
 
         if (channelDropCampaignsProgress is null)
         {
@@ -355,7 +360,7 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
 
         if (resp != null && resp.Data.Channel.ViewerDropCampaigns != null)
         {
-            List<DropCampaign> campaigns = resp.Data.Channel.ViewerDropCampaigns;
+            List<DropCampaign> campaigns = resp!.Data.Channel.ViewerDropCampaigns;
 
             campaigns.ForEach(campaign => campaign.TimeBasedDrops.RemoveAll(drop => drop.RequiredMinutesWatched == 0));
             campaigns.RemoveAll(campaign => campaign.TimeBasedDrops.Count == 0);
@@ -434,7 +439,7 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
 
         dynamic? resp = await DoGQLRequestAsync(query);
 
-        RewardCampaignCode rewardCampaignCode = resp.Data.CurrentUser.Inventory.RewardValue;
+        RewardCampaignCode rewardCampaignCode = resp!.Data.CurrentUser.Inventory.RewardValue;
 
         return rewardCampaignCode;
     }
@@ -450,7 +455,7 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
 
         dynamic? resp = await DoGQLRequestAsync(query);
 
-        List<Badge> badges = resp.Data.CurrentUser.AvailableBadges;
+        List<Badge> badges = resp!.Data.CurrentUser.AvailableBadges;
 
         foreach (var badge in badges)
         {
@@ -481,7 +486,7 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
 
         dynamic? resp = await DoGQLRequestAsync(query);
 
-        Channel channel = resp.Data.Channel;
+        Channel channel = resp!.Data.Channel;
 
         foreach (var edge in channel.Self.AvailableEmoteSetsPaginated.Edges)
         {
@@ -597,7 +602,7 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
 
                 return responseArray;
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
                 if (i == 4)
                 {
@@ -629,7 +634,7 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
 
         var rawBody = item.GetProperty("request").GetProperty("body").GetProperty("raw");
 
-        var jsonBody = JsonDocument.Parse(rawBody.GetString()).RootElement;
+        var jsonBody = JsonDocument.Parse(rawBody.GetString()!).RootElement;
 
         // Check if the properties exist before accessing them
         Dictionary<string, object?>? variables = null;

@@ -100,7 +100,7 @@ public class WatchRequest : IKickWatchManager
                     throw;
                 }
 
-                var livestreamId = channel.Livestream.Id;
+                var livestreamId = channel!.Livestream!.Id;
                 _logger.LogDebug("Starting watch tasks for livestream {LivestreamId}", (object)livestreamId);
 
                 // Start receive loop
@@ -370,7 +370,7 @@ public class WatchRequest : IKickWatchManager
             CleanupConnectionAsync().GetAwaiter().GetResult();
 
             // Reset state
-            _wssToken = null;
+            _wssToken = null!;
             _clientWebSocket = new ClientWebSocket();
             _cancellationTokenSource = new CancellationTokenSource();
             _receivingTask = null;

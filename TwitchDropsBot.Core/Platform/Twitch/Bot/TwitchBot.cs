@@ -52,7 +52,7 @@ public class TwitchBot : BaseBot<TwitchUser>
     {
         var user = BotSettings.CurrentValue.TwitchSettings.TwitchUsers.Find(user => user.Id == BotUser.Id);
 
-        return user.FavouriteGames;
+        return user?.FavouriteGames ?? new List<string>();
     }
 
     protected override async Task StartAsync()
@@ -91,7 +91,7 @@ public class TwitchBot : BaseBot<TwitchUser>
         if (BotUser.OnlyConnectedAccounts)
         {
             thingsToWatch.RemoveAll(x =>
-                x is DropCampaign dropCampaign && !dropCampaign.Self.IsAccountConnected &&
+                x is DropCampaign dropCampaign && !dropCampaign.Self!.IsAccountConnected &&
                 dropCampaign.AccountLinkURL != "https://twitch.tv/");
         }
 
@@ -103,7 +103,7 @@ public class TwitchBot : BaseBot<TwitchUser>
         // Assuming you have a list of favorite game names
         var favoriteGameNames = _gamesToCheck;
 
-        var favouriteCampaigns = thingsToWatch.Where(x => x.Game.IsFavorite).ToList();
+        var favouriteCampaigns = thingsToWatch.Where(x => x.Game!.IsFavorite).ToList();
         thingsToWatch.RemoveAll(x => favouriteCampaigns.Contains(x));
 
         // Re order favouriteCampaigns to match the config file order
@@ -115,7 +115,7 @@ public class TwitchBot : BaseBot<TwitchUser>
                 if (!x.Game!.IsFavorite)
                     return int.MaxValue;
 
-                var idx = favoriteGameNames.IndexOf(x.Game.DisplayName);
+                var idx = favoriteGameNames.IndexOf(x.Game.DisplayName ?? "");
                 return idx == -1 ? int.MaxValue : idx;
             })
             .ThenBy(x => x.GetEndDate())
@@ -147,7 +147,7 @@ public class TwitchBot : BaseBot<TwitchUser>
                 throw new NoBroadcasterOrNoCampaignLeft();
             }
 
-            (campaign, broadcaster) = await SelectBroadcasterAsync(thingsToWatch, inventory);
+            (campaign, broadcaster) = await SelectBroadcasterAsync(thingsToWatch, inventory!);
 
             if (campaign is null)
             {
@@ -258,13 +258,13 @@ public class TwitchBot : BaseBot<TwitchUser>
         {
             var notifications = await BotUser.TwitchRepository.FetchNotificationsAsync(1);
 
-            foreach (var edge in notifications.Edges)
+            foreach (var edge in notifications!.Edges)
             {
                 //Search for the first action with the type "click"
                 var action = edge.Node.Actions.FirstOrDefault(x => x.Type == "click");
 
                 await NotificationService.SendNotification(BotUser, edge.Node.Body, edge.Node.ThumbnailUrl,
-                    new Uri(action.Url));
+                    new Uri(action!.Url));
             }
         }
 
@@ -285,7 +285,7 @@ public class TwitchBot : BaseBot<TwitchUser>
         if (string.IsNullOrEmpty(dropCurrentSession.DropId) ||
             dropCurrentSession.CurrentMinutesWatched == dropCurrentSession.RequiredMinutesWatched)
         {
-            await BotUser.WatchManager.FakeWatchAsync(broadcaster, campaign.Game,
+            await BotUser.WatchManager.FakeWatchAsync(broadcaster, campaign.Game!,
                 BotSettings.CurrentValue.AttemptToWatch);
             dropCurrentSession = await BotUser.TwitchRepository.FetchCurrentSessionContextAsync(broadcaster);
         }
@@ -336,7 +336,7 @@ public class TwitchBot : BaseBot<TwitchUser>
             try
             {
                 await BotUser.WatchManager
-                    .WatchStreamAsync(broadcaster, campaign.Game); // If not live, it will throw a 404 error    
+                    .WatchStreamAsync(broadcaster, campaign.Game!); // If not live, it will throw a 404 error    
             }
             catch (System.Exception ex)
             {
@@ -408,7 +408,7 @@ public class TwitchBot : BaseBot<TwitchUser>
                 Logger.LogInformation("No drop current session found");
                 //Check if the stream still alive
 
-                var broadcasterData = BotUser.TwitchRepository.FetchStreamInformationAsync(broadcaster.Login);
+                var broadcasterData = BotUser.TwitchRepository.FetchStreamInformationAsync(broadcaster.Login!);
 
                 if (broadcasterData?.Result is null)
                 {
@@ -451,7 +451,7 @@ public class TwitchBot : BaseBot<TwitchUser>
             try
             {
                 await BotUser.WatchManager
-                    .WatchStreamAsync(broadcaster, campaign.Game); // If not live, it will throw a 404 error    
+                    .WatchStreamAsync(broadcaster, campaign.Game!); // If not live, it will throw a 404 error    
             }
             catch (System.Exception ex)
             {
@@ -520,7 +520,7 @@ public class TwitchBot : BaseBot<TwitchUser>
                 Logger.LogInformation("No drop current session found");
                 //Check if the stream still alive
 
-                var broadcasterData = BotUser.TwitchRepository.FetchStreamInformationAsync(broadcaster.Login);
+                var broadcasterData = BotUser.TwitchRepository.FetchStreamInformationAsync(broadcaster.Login!);
 
                 if (broadcasterData?.Result is null)
                 {
@@ -591,7 +591,7 @@ public class TwitchBot : BaseBot<TwitchUser>
             }
 
             var tempDropCampaign = await BotUser.TwitchRepository.FetchTimeBasedDropsAsync(campaign.Id);
-            campaign.TimeBasedDrops = tempDropCampaign.TimeBasedDrops;
+            campaign.TimeBasedDrops = tempDropCampaign!.TimeBasedDrops;
             campaign.Game = tempDropCampaign.Game;
             campaign.Allow = tempDropCampaign.Allow;
 
@@ -651,7 +651,7 @@ public class TwitchBot : BaseBot<TwitchUser>
 
             if (channels is not null && channels.Count < 250)
             {
-                var channelGroups = channels.Select(x => x.Name).Chunk(10).ToList();
+                var channelGroups = channels.Where(x => x.Name != null).Select(x => x.Name!).Chunk(10).ToList();
 
                 foreach (var channelGroup in channelGroups)
                 {
@@ -664,8 +664,8 @@ public class TwitchBot : BaseBot<TwitchUser>
 
                     // from tempBroadcasters, select the first one that is live and that have the right game
                     var tempBroadcaster = tempBroadcasters.FirstOrDefault(tempBroadcaster =>
-                        tempBroadcaster.IsLive() && tempBroadcaster.BroadcastSettings.Game?.Id != null &&
-                        (campaign.Game.DisplayName == "Special Events" ||
+                        tempBroadcaster.IsLive() && tempBroadcaster.BroadcastSettings?.Game?.Id != null &&
+                        (campaign.Game!.DisplayName == "Special Events" ||
                          tempBroadcaster.BroadcastSettings.Game.Id == campaign.Game.Id));
 
                     if (tempBroadcaster is null)
@@ -702,7 +702,7 @@ public class TwitchBot : BaseBot<TwitchUser>
             }
 
             // Search for channel that potentially have the drops
-            var game = await BotUser.TwitchRepository.FetchDirectoryPageGameAsync(campaign.Game.Slug,
+            var game = await BotUser.TwitchRepository.FetchDirectoryPageGameAsync(campaign.Game!.Slug!,
                 campaign is DropCampaign);
 
             if (game is null)
@@ -712,11 +712,11 @@ public class TwitchBot : BaseBot<TwitchUser>
             }
 
             // Select the channel that have the most viewers
-            game.Streams.Edges = game.Streams.Edges.OrderByDescending(x => x.Node.ViewersCount).ToList();
+            game!.Streams!.Edges = game.Streams.Edges.OrderByDescending(x => x.Node!.ViewersCount).ToList();
             var edge = game.Streams.Edges.FirstOrDefault();
             if (edge != null)
             {
-                broadcaster = edge.Node.Broadcaster;
+                broadcaster = edge.Node!.Broadcaster;
             }
 
             return (campaign, broadcaster);
@@ -751,8 +751,8 @@ public class TwitchBot : BaseBot<TwitchUser>
                     {
                         foreach (var benefitEdge in timeBasedDrop.BenefitEdges)
                         {
-                            await NotificationService.SendNotification(BotUser, dropCampaignInProgress.Game.Name,
-                                benefitEdge.Benefit.Name, benefitEdge.Benefit.ImageAssetURL);
+                            await NotificationService.SendNotification(BotUser, dropCampaignInProgress.Game!.Name!,
+                                benefitEdge.Benefit!.Name!, benefitEdge.Benefit.ImageAssetURL!);
                         }
                     }
 
@@ -772,13 +772,13 @@ public class TwitchBot : BaseBot<TwitchUser>
         List<CompletedRewardCampaigns> newlyClaimedReward = newClaimedReward.Except(claimedReward).ToList();
         foreach (var rewardCampaign in newlyClaimedReward)
         {
-            foreach (var reward in rewardCampaign.Rewards)
+            foreach (var reward in rewardCampaign.Rewards!)
             {
-                var rewardCampaignCode = await BotUser.TwitchRepository.RewardCodeModal(rewardCampaign.Id, reward.Id);
+                var rewardCampaignCode = await BotUser.TwitchRepository.RewardCodeModal(rewardCampaign.Id!, reward.Id!);
                 var message =
-                    $"```{rewardCampaignCode.Value}``` has been rewarded for {reward.Name}`\n Claim before <t:{((DateTimeOffset)reward.EarnableUntil).ToUnixTimeSeconds()}>";
-                await NotificationService.SendNotification(BotUser, message, reward.ThumbnailImage.Image1xURL,
-                    new Uri(rewardCampaign.ExternalURL));
+                    $"```{rewardCampaignCode.Value}``` has been rewarded for {reward.Name}`\n Claim before <t:{((DateTimeOffset)reward.EarnableUntil!).ToUnixTimeSeconds()}>";
+                await NotificationService.SendNotification(BotUser, message, reward.ThumbnailImage!.Image1xURL!,
+                    new Uri(rewardCampaign.ExternalURL!));
                 await Task.Delay(TimeSpan.FromSeconds(5));
             }
         }

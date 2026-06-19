@@ -10,17 +10,17 @@ public partial class RewardCampaign : AbstractCampaign
 {
     public DistributionType DistributionType { get; set; }
     
-    public override async Task<bool> IsCompleted(Inventory inventory, TwitchGqlRepository _repository)
+    public override Task<bool> IsCompleted(Inventory inventory, TwitchGqlRepository _repository)
     {
         if (inventory.CompletedRewardCampaigns is null)
         {
-            return false;
+            return Task.FromResult(false);
         }
 
         List<CompletedRewardCampaigns> completedRewardCampaigns = inventory.CompletedRewardCampaigns;
 
         var anyCompletedRewardCampaigns = completedRewardCampaigns.Any(x => x.Id == Id);
 
-        return anyCompletedRewardCampaigns;
+        return Task.FromResult(anyCompletedRewardCampaigns);
     }
 }

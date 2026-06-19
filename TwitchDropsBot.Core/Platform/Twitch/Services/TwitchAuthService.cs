@@ -79,8 +79,8 @@ public class TwitchAuthService
 
         var UserConfig = new TwitchUserSettings();
         UserConfig.ClientSecret = secret;
-        UserConfig.Id = jsonResponse.RootElement.GetProperty("user_id").GetString();
-        UserConfig.Login = jsonResponse.RootElement.GetProperty("login").GetString();
+        UserConfig.Id = jsonResponse.RootElement.GetProperty("user_id").GetString()!;
+        UserConfig.Login = jsonResponse.RootElement.GetProperty("login").GetString()!;
 
 
         // Do request to TwitchClient URL to get the unique id

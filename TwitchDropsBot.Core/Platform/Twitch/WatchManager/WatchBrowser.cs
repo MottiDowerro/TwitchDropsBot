@@ -20,7 +20,7 @@ public class WatchBrowser : WatchBrowser<TwitchUser, Game, User>, ITwitchWatchMa
         // Check if stream still live, if not throw error and close
         if (broadcaster != null)
         {
-            var tempBroadcaster = await BotUser.TwitchRepository.FetchStreamInformationAsync(broadcaster.Login);
+            var tempBroadcaster = await BotUser.TwitchRepository.FetchStreamInformationAsync(broadcaster.Login!);
             
             if (tempBroadcaster != null)
             {
@@ -60,7 +60,7 @@ public class WatchBrowser : WatchBrowser<TwitchUser, Game, User>, ITwitchWatchMa
 
         await Page.ReloadAsync();
 
-        await Page.GoToAsync($"https://www.twitch.tv/{broadcaster.Login}");
+        await Page.GoToAsync($"https://www.twitch.tv/{broadcaster!.Login}");
 
         // If classification overlay
         try
@@ -68,7 +68,7 @@ public class WatchBrowser : WatchBrowser<TwitchUser, Game, User>, ITwitchWatchMa
             await Page.WaitForSelectorAsync("button[data-a-target='content-classification-gate-overlay-start-watching-button']", new() { Timeout = 10000 });
             await Page.ClickAsync("button[data-a-target='content-classification-gate-overlay-start-watching-button']");
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
             Logger.LogInformation("[BROWSER] No classification button found, continuing...");
         }

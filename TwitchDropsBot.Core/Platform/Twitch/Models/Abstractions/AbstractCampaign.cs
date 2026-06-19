@@ -63,6 +63,6 @@ public abstract class AbstractCampaign
 
     public override string ToString()
     {
-        return Game is not null ? Game.DisplayName ?? Game.Name : "Game null" + " " + Name + " " + EndAt;
+        return Game is not null ? Game.DisplayName ?? Game.Name ?? "Unknown" : "Game null" + " " + Name + " " + EndAt;
     }
 }

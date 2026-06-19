@@ -18,7 +18,7 @@ public partial class DropCampaign : AbstractCampaign
         {
             var lastTier = dropsCampaignInProgress.TimeBasedDrops.OrderBy(x => x.RequiredMinutesWatched).Last();
             //fixme check if works
-            if (lastTier.Self.CurrentMinutesWatched == lastTier.RequiredMinutesWatched)
+            if (lastTier.Self!.CurrentMinutesWatched == lastTier.RequiredMinutesWatched)
             {
                 return true;
             }
@@ -31,19 +31,19 @@ public partial class DropCampaign : AbstractCampaign
             {
                 foreach (var benefitEdge in timeBasedDrop.BenefitEdges)
                 {
-                    if (benefitEdge.Benefit.DistributionType == DistributionType.EMOTE)
+                    if (benefitEdge.Benefit!.DistributionType == DistributionType.EMOTE)
                     {
                         // Arc raiders emote name is in the time based drops name
                         // BF emote name is in the benefit name
                         // Rust = "EmoteName Emote"
-                        List<string> emotes = new List<string>() {timeBasedDrop.Name, benefitEdge.Benefit.Name};
+                        List<string> emotes = new List<string>() {timeBasedDrop.Name!, benefitEdge.Benefit.Name!};
                         var response = await repository.HaveEmote(emotes);
                         return response;
                     }
 
                     if (benefitEdge.Benefit.DistributionType == DistributionType.BADGE)
                     {
-                        List<string> badges = new List<string>() {timeBasedDrop.Name, benefitEdge.Benefit.Name};
+                        List<string> badges = new List<string>() {timeBasedDrop.Name!, benefitEdge.Benefit.Name!};
                         var response = await repository.HaveBadge(badges);
                         return response;
                     }

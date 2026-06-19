@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using TwitchDropsBot.Core.Platform.Shared.Settings;
 
 public class SettingsManager
@@ -11,7 +11,7 @@ public class SettingsManager
         _filePath = filePath;
 
         var dir = Path.GetDirectoryName(filePath);
-        if (!Directory.Exists(dir))
+        if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
             Directory.CreateDirectory(dir);
 
         if (!File.Exists(_filePath))

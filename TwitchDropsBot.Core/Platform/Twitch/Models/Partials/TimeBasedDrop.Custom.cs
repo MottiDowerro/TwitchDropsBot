@@ -5,17 +5,13 @@ namespace TwitchDropsBot.Core.Platform.Twitch.Models;
 
 public partial class TimeBasedDrop : IInventorySystem
 {
-    public Game Game { get; set; }
+    public Game? Game { get; set; }
     
     public string GetName()
-    {
-        return BenefitEdges[0].Benefit.Name;
-    }
+        return BenefitEdges.FirstOrDefault()?.Benefit?.Name ?? "Unknown";
 
     public string GetImage()
-    {
-        return BenefitEdges[0].Benefit.ImageAssetURL;
-    }
+        return BenefitEdges.FirstOrDefault()?.Benefit?.ImageAssetURL ?? "";
 
     public string GetGroup()
     {
@@ -53,6 +49,6 @@ public partial class TimeBasedDrop : IInventorySystem
             return Self.IsClaimed;
         }
         
-        return BenefitEdges.All(edge => edge.Benefit.IsClaimed);
+        return BenefitEdges.All(edge => edge.Benefit?.IsClaimed ?? false);
     }
 }

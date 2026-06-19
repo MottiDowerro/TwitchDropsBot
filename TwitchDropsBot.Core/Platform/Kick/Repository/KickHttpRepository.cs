@@ -89,7 +89,7 @@ public class KickHttpRepository : BotRepository<KickUser>
     public async Task ClaimDrop(Campaign campaign, Reward reward, CancellationToken cancellationToken = default)
     {
         _logger.LogTrace("Attempting to claim drop for campaign {CampaignName}, reward {RewardName}",
-            campaign.Category.Name, reward.Name);
+            campaign.Category!.Name, reward.Name);
 
         var body = new
         {
@@ -99,7 +99,7 @@ public class KickHttpRepository : BotRepository<KickUser>
 
         if (NoClaimCategories.Contains(campaign.Category))
         {
-            _logger.LogTrace("Category {CategoryName} is in no-claim list, skipping", campaign.Category.Name);
+            _logger.LogTrace("Category {CategoryName} is in no-claim list, skipping", campaign.Category!.Name);
             throw new CantClaimException();
         }
 
@@ -114,12 +114,12 @@ public class KickHttpRepository : BotRepository<KickUser>
                 cancellationToken: cancellationToken
             );
 
-            _logger.LogTrace("Successfully claimed drop for {CampaignName}", campaign.Category.Name);
+            _logger.LogTrace("Successfully claimed drop for {CampaignName}", campaign.Category!.Name);
         }
         catch (CantClaimException)
         {
             _logger.LogTrace("Cannot claim for category {CategoryName}, adding to no-claim list",
-                campaign.Category.Name);
+                campaign.Category!.Name);
             NoClaimCategories.Add(campaign.Category);
             throw;
         }
@@ -219,7 +219,7 @@ public class KickHttpRepository : BotRepository<KickUser>
 
     public async Task<List<Livestream>> FindStreams(Campaign campaign, CancellationToken cancellationToken = default)
     {
-        _logger.LogTrace("Finding streams for campaign {CampaignName}", campaign.Category.Name);
+        _logger.LogTrace("Finding streams for campaign {CampaignName}", campaign.Category!.Name);
 
         var url = $"https://mobile.kick.com/api/v1/livestreams";
         var categoryId = campaign.Category.Id;
@@ -241,7 +241,7 @@ public class KickHttpRepository : BotRepository<KickUser>
 
         var streams = result?.data?.livestreams ?? new List<Livestream>();
         _logger.LogTrace("Found {Count} streams for campaign {CampaignName}",
-            streams.Count, campaign.Category.Name);
+            streams.Count, campaign.Category!.Name);
 
         return streams;
     }

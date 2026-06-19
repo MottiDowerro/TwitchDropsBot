@@ -8,12 +8,12 @@ public partial class UserDropReward : IInventorySystem
 
     public string GetName()
     {
-        return Name;
+        return Name!;
     }
 
     public string GetImage()
     {
-        return ImageURL;
+        return ImageURL!;
     }
 
     public string GetGroup()

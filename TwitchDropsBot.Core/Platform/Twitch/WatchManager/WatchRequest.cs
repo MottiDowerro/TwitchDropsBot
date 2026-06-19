@@ -51,7 +51,7 @@ public class WatchRequest : ITwitchWatchManager
                 if (streamUrl == null)
                 {
                     PlaybackAccessToken? streamPlaybackAccessToken =
-                        await twitchGraphQlClient.FetchPlaybackAccessTokenAsync(broadcaster.Login);
+                        await twitchGraphQlClient.FetchPlaybackAccessTokenAsync(broadcaster.Login!);
 
                     var requestBroadcastQualitiesURL =
                         $"https://usher.ttvnw.net/api/channel/hls/{broadcaster.Login}.m3u8?sig={streamPlaybackAccessToken!.Signature}&token={streamPlaybackAccessToken!.Value}";
@@ -100,7 +100,7 @@ public class WatchRequest : ITwitchWatchManager
 
             if ((requestTime - lastRequestTime).TotalSeconds >= 59)
             {
-                var tempBroadcaster = await twitchGraphQlClient.FetchStreamInformationAsync(broadcaster.Login);
+                var tempBroadcaster = await twitchGraphQlClient.FetchStreamInformationAsync(broadcaster.Login!);
 
                 if (tempBroadcaster is not null)
                 {
@@ -165,9 +165,9 @@ public class WatchRequest : ITwitchWatchManager
                 ["event"] = "minute-watched",
                 ["properties"] = new Dictionary<string, object>
                 {
-                    ["broadcast_id"] = stream.Id,
-                    ["channel_id"] = broadcaster.Id,
-                    ["channel"] = broadcaster.Login,
+                    ["broadcast_id"] = stream.Id!,
+                    ["channel_id"] = broadcaster.Id!,
+                    ["channel"] = broadcaster.Login!,
                     ["client_time"] = DateTime.UtcNow.ToString("o").Replace("+00:00", "Z"),
                     ["game"] = game.Name ?? game.DisplayName ?? "",
                     ["game_id"] = game.Id ?? "",

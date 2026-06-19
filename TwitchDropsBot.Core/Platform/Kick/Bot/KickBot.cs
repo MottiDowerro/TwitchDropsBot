@@ -21,7 +21,7 @@ public class KickBot : BaseBot<KickUser>
     {
         var user = BotSettings.CurrentValue.KickSettings.KickUsers.Find(user => user.Id == BotUser.Id);
 
-        return user.FavouriteGames;
+        return user?.FavouriteGames ?? new List<string>();
     }
 
     protected override async Task StartAsync()
@@ -78,7 +78,7 @@ public class KickBot : BaseBot<KickUser>
 
         Logger.LogInformation($"Time based drops : {reward.Name}");
         Logger.LogInformation(
-            $"Current drop campaign: {campaign.Name} ({campaign.Category.Name}), watching {broadcaster.slug} | {broadcaster.Id}");
+            $"Current drop campaign: {campaign.Name} ({campaign.Category?.Name ?? "KICK"}), watching {broadcaster.slug} | {broadcaster.Id}");
         await WatchStreamAsync(broadcaster, campaign, reward);
     }
 
@@ -93,7 +93,7 @@ public class KickBot : BaseBot<KickUser>
         while (summary is null)
         {
             Logger.LogInformation("Trying to init the drop...");
-            await BotUser.WatchManager.WatchStreamAsync(broadcaster, campaign.Category);
+            await BotUser.WatchManager.WatchStreamAsync(broadcaster, campaign.Category!);
             
             var waitTime = TimeSpan.FromSeconds(BotSettings.CurrentValue.GetWatchCheckIntervalSeconds(60));
             await Task.Delay(waitTime);
@@ -109,7 +109,7 @@ public class KickBot : BaseBot<KickUser>
         var summary = await BotUser.KickRepository.GetSummary(campaign);
         var stuckCounter = 0;
         double previousMinuteWatched = 0;
-        var minuteWatched = summary.ProgressUnits;
+        var minuteWatched = summary!.ProgressUnits;
 
         var requiredMinutesToWatch = reward.RequiredUnits;
 
@@ -119,7 +119,7 @@ public class KickBot : BaseBot<KickUser>
             try
             {
                 await BotUser.WatchManager
-                    .WatchStreamAsync(broadcaster, campaign.Category); // If not live, it will throw a 404 error    
+                    .WatchStreamAsync(broadcaster, campaign.Category!); // If not live, it will throw a 404 error    
             }
             catch (System.Exception ex)
             {
@@ -170,7 +170,7 @@ public class KickBot : BaseBot<KickUser>
     {
         foreach (var campaign in campaigns.ToList())
         {
-            Logger.LogInformation($"Checking {campaign.Category.Name} ({campaign.Name})...");
+            Logger.LogInformation($"Checking {campaign.Category?.Name ?? "KICK"} ({campaign.Name})...");
 
             var matchingCampaignInventory = inventory.Find(x => x.Id == campaign.Id);
 
@@ -196,7 +196,7 @@ public class KickBot : BaseBot<KickUser>
                 {
                     var channelInfo = await BotUser.KickRepository.GetChannelAsync(channel.slug);
 
-                    if (channelInfo.Livestream is not null)
+                    if (channelInfo?.Livestream is not null)
                     {
                         channelToWatch = channelInfo;
                         break;
@@ -237,7 +237,7 @@ public class KickBot : BaseBot<KickUser>
             {
                 //fixme: check if works
                 if (!reward.Claimed && reward.Progress == 1 &&
-                    !BotUser.KickRepository.NoClaimCategories.Contains(campaign.Category))
+                    !BotUser.KickRepository.NoClaimCategories.Contains(campaign.Category!))
                 {
                     try
                     {
@@ -255,7 +255,7 @@ public class KickBot : BaseBot<KickUser>
                         continue;
                     }
                     
-                    await NotificationService.SendNotification(BotUser, campaign.Category.Name, reward.Name, $"https://ext.cdn.kick.com/{reward.ImageUrl}");
+                    await NotificationService.SendNotification(BotUser, campaign.Category?.Name ?? "KICK", reward.Name, $"https://ext.cdn.kick.com/{reward.ImageUrl}");
                 }
             }
         }
