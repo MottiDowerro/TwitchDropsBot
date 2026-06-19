@@ -243,7 +243,7 @@ public class KickBot : BaseBot<KickUser>
                     {
                         await BotUser.KickRepository.ClaimDrop(campaign, reward);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         Logger.LogError(
                             "Can't claim {reward.Name} for the campaign {campaign.Name}, account not linked please restart the bot once done...",

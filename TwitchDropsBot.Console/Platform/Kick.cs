@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using TwitchDropsBot.Core.Platform.Kick.Services;
 using TwitchDropsBot.Core.Platform.Kick.Settings;
 using TwitchDropsBot.Core.Platform.Shared.Services;
@@ -26,6 +26,12 @@ public class Kick
         }
 
         var (id, username) = await PollService.GetUserInfo(token);
+
+        if (id is null || username is null)
+        {
+            logger.LogInformation("Failed to authenticate (user info is null)");
+            return;
+        }
 
         var settings = manager.Read();
 

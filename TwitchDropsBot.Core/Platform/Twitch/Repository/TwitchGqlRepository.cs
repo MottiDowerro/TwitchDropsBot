@@ -122,9 +122,9 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
 
         dynamic? resp = await DoGQLRequestAsync(query);
 
-        if (resp != null && resp.Data.User.DropCampaign != null)
+        if (resp != null && resp?.Data?.User?.DropCampaign != null)
         {
-            DropCampaign dropCampaign = resp.Data.User.DropCampaign;
+            DropCampaign dropCampaign = resp!.Data.User.DropCampaign;
 
             if (dropCampaign.Id != dropId)
             {
@@ -251,24 +251,26 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
         dynamic? resp = await DoGQLRequestAsync(queries);
 
         List<User> users = new List<User>();
-        foreach (var item in resp.EnumerateArray())
+        if (resp != null)
         {
-            if (item.GetProperty("data").GetProperty("user").ValueKind != JsonValueKind.Null)
+            foreach (var item in resp.EnumerateArray())
             {
-                var options = new JsonSerializerOptions
+                if (item.GetProperty("data").GetProperty("user").ValueKind != JsonValueKind.Null)
                 {
-                    PropertyNameCaseInsensitive = true
-                };
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
 
-                var user = JsonSerializer.Deserialize<User>(item.GetProperty("data").GetProperty("user").GetRawText(),
-                    options);
-                if (user != null)
-                {
-                    users.Add(user);
+                    var user = JsonSerializer.Deserialize<User>(item.GetProperty("data").GetProperty("user").GetRawText()!,
+                        options);
+                    if (user != null)
+                    {
+                        users.Add(user);
+                    }
                 }
             }
         }
-
         return users;
     }
 
@@ -358,17 +360,17 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
 
         dynamic? resp = await DoGQLRequestAsync(query);
 
-        if (resp != null && resp.Data.Channel.ViewerDropCampaigns != null)
+        if (resp != null && resp?.Data?.Channel?.ViewerDropCampaigns != null)
         {
             List<DropCampaign> campaigns = resp!.Data.Channel.ViewerDropCampaigns;
 
-            campaigns.ForEach(campaign => campaign.TimeBasedDrops.RemoveAll(drop => drop.RequiredMinutesWatched == 0));
-            campaigns.RemoveAll(campaign => campaign.TimeBasedDrops.Count == 0);
+            campaigns?.ForEach(campaign => campaign.TimeBasedDrops?.RemoveAll(drop => drop.RequiredMinutesWatched == 0));
+            campaigns?.RemoveAll(campaign => campaign.TimeBasedDrops?.Count == 0);
 
-            return campaigns;
+            return campaigns ?? new List<DropCampaign>();
         }
 
-        return new List<DropCampaign?>();
+        return new List<DropCampaign>();
     }
     
     public async Task<dynamic?> SimulateWatchAsync(string compressedData)

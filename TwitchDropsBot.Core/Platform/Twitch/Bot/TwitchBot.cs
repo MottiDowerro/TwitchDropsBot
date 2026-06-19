@@ -380,7 +380,7 @@ public class TwitchBot : BaseBot<TwitchUser>
             if (stuckCounter >= 30)
             {
                 BotUser.WatchManager.Close();
-                await BotUser.WatchManager.WatchStreamAsync(broadcaster, campaign.Game);
+                await BotUser.WatchManager.WatchStreamAsync(broadcaster, campaign.Game!);
                 
                 var stuckWaitTime = TimeSpan.FromSeconds(_botSettings.CurrentValue.GetWatchCheckIntervalSeconds(20));
                 await Task.Delay(stuckWaitTime);
@@ -495,7 +495,7 @@ public class TwitchBot : BaseBot<TwitchUser>
             if (stuckCounter >= 10)
             {
                 BotUser.WatchManager.Close();
-                await BotUser.WatchManager.WatchStreamAsync(broadcaster, campaign.Game);
+                await BotUser.WatchManager.WatchStreamAsync(broadcaster, campaign.Game!);
                 await Task.Delay(TimeSpan.FromSeconds(20));
 
                 var newDropCurrentSession = await CheckDropProgress(broadcaster, campaign);
