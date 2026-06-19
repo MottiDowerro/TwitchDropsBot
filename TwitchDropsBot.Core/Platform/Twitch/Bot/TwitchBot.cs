@@ -382,8 +382,8 @@ public class TwitchBot : BaseBot<TwitchUser>
                 BotUser.WatchManager.Close();
                 await BotUser.WatchManager.WatchStreamAsync(broadcaster, campaign.Game);
                 
-                var waitTime = TimeSpan.FromSeconds(_botSettings.CurrentValue.GetWatchCheckIntervalSeconds(20));
-                await Task.Delay(waitTime);
+                var stuckWaitTime = TimeSpan.FromSeconds(_botSettings.CurrentValue.GetWatchCheckIntervalSeconds(20));
+                await Task.Delay(stuckWaitTime);
 
                 var newDropCurrentSession =
                     await BotUser.TwitchRepository.FetchCurrentSessionContextAsync(broadcaster);
