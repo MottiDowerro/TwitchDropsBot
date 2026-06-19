@@ -8,10 +8,14 @@ public partial class TimeBasedDrop : IInventorySystem
     public Game? Game { get; set; }
     
     public string GetName()
+    {
         return BenefitEdges.FirstOrDefault()?.Benefit?.Name ?? "Unknown";
+    }
 
     public string GetImage()
+    {
         return BenefitEdges.FirstOrDefault()?.Benefit?.ImageAssetURL ?? "";
+    }
 
     public string GetGroup()
     {
