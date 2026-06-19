@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TwitchDropsBot.Core.Platform.Shared.Bots;
 using TwitchDropsBot.Core.Platform.Shared.Exceptions;
@@ -785,5 +785,4 @@ public class TwitchBot : BaseBot<TwitchUser>
 
         claimedReward = newClaimedReward;
     }
-}
 }
