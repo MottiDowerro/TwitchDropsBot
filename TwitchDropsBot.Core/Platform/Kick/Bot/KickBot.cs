@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TwitchDropsBot.Core.Platform.Kick.Models;

@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using TwitchDropsBot.Core.Twitch.Models.Interfaces;
 
 namespace TwitchDropsBot.Core.Platform.Twitch.Models;

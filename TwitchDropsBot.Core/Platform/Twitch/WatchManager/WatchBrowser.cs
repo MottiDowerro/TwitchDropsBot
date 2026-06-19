@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using PuppeteerSharp;
 using TwitchDropsBot.Core.Platform.Shared.Exceptions;
 using TwitchDropsBot.Core.Platform.Shared.Services;

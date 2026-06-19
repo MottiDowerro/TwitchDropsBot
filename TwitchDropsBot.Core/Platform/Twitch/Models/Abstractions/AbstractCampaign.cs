@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using TwitchDropsBot.Core.Platform.Twitch.Bot;
 using TwitchDropsBot.Core.Platform.Twitch.Repository;
 
@@ -7,9 +7,9 @@ namespace TwitchDropsBot.Core.Platform.Twitch.Models.Abstractions;
 public abstract class AbstractCampaign
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [JsonPropertyName("game")]
     public Game? Game { get; set; }
@@ -21,7 +21,7 @@ public abstract class AbstractCampaign
     public List<TimeBasedDrop> TimeBasedDrops { get; set; } = new List<TimeBasedDrop>();
     
     [JsonPropertyName("allow")]
-    public DropCampaignACL Allow { get; set; }
+    public DropCampaignACL Allow { get; set; } = null!;
     
     [JsonPropertyName("startAt")]
     public DateTime StartAt { get; set; }

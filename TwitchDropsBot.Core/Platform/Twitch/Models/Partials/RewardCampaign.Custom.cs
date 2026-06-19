@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using Discord;
 using TwitchDropsBot.Core.Platform.Twitch.Bot;
 using TwitchDropsBot.Core.Platform.Twitch.Models.Abstractions;

@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using FuzzySharp;
 using GraphQL;
 using GraphQL.Client.Http;
