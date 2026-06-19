@@ -1,4 +1,4 @@
-﻿namespace TwitchDropsBot.Core.Platform.Shared.Exceptions;
+namespace TwitchDropsBot.Core.Platform.Shared.Exceptions;
 
 [Serializable]
 public class NoBroadcasterOrNoCampaignLeft : System.Exception
@@ -8,9 +8,5 @@ public class NoBroadcasterOrNoCampaignLeft : System.Exception
     public NoBroadcasterOrNoCampaignLeft() : base(DefaultMessage) { }
     public NoBroadcasterOrNoCampaignLeft(string message) : base(message) { }
     public NoBroadcasterOrNoCampaignLeft(string message, System.Exception inner) : base(message, inner) { }
-    protected NoBroadcasterOrNoCampaignLeft(System.Runtime.Serialization.SerializationInfo info,
-        System.Runtime.Serialization.StreamingContext context)
-        : base(info, context)
-    {
-    }
+
 }

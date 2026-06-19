@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace TwitchDropsBot.Core.Platform.Twitch.Models;
 
@@ -6,7 +6,7 @@ public partial class UserDropReward
 {
     
     [JsonPropertyName("id")]
-    public string? Id { get; set; }
+    public required string Id { get; set; }
     
     [JsonPropertyName("imageURL")]
     public string? ImageURL { get; set; }

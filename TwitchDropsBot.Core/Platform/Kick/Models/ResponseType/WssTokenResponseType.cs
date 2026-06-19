@@ -1,9 +1,9 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace TwitchDropsBot.Core.Platform.Kick.Models.ResponseType;
 
 public class WssTokenResponseType
 {
     [JsonPropertyName("token")]
-    public string Token { get; set; }
+    public string Token { get; set; } = null!;
 }

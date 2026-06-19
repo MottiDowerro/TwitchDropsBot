@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Discord;
 using Discord.Webhook;
@@ -23,10 +23,10 @@ public abstract class BotUser : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public UISink UISink { get; set; }
-    public string Login { get; set; }
-    public string Id { get; set; }
-    public List<string> FavouriteGames { get; set; }
+    public UISink UISink { get; set; } = null!;
+    public string Login { get; set; } = null!;
+    public string Id { get; set; } = null!;
+    public List<string> FavouriteGames { get; set; } = null!;
     public bool OnlyFavouriteGames { get; set; }
     public bool OnlyConnectedAccounts { get; set; }
 
@@ -46,7 +46,7 @@ public abstract class BotUser : INotifyPropertyChanged
 
     public ILogger Logger { get; }
     
-    public CancellationTokenSource CancellationTokenSource { get; set; }
+    public CancellationTokenSource CancellationTokenSource { get; set; } = null!;
     private DiscordWebhookClient? _discordWebhookClient;
 
     protected BotUser(

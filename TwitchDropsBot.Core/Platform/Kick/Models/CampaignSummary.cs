@@ -1,15 +1,15 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace TwitchDropsBot.Core.Platform.Kick.Models;
 
 public class CampaignSummary
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
 
     [JsonPropertyName("progress_units")]
     public double ProgressUnits { get; set; }
 
     [JsonPropertyName("rewards")]
-    public List<Reward> Rewards { get; set; }
+    public List<Reward> Rewards { get; set; } = null!;
 }

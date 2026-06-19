@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace TwitchDropsBot.Core.Platform.Kick.Models;
 
@@ -8,8 +8,8 @@ public class User
     public int Id { get; set; }
     
     [JsonPropertyName("profile_picture")]
-    public string ProfilePicture { get; set; }
+    public string ProfilePicture { get; set; } = null!;
     
     [JsonPropertyName("username")]
-    public string Username { get; set; }
+    public string Username { get; set; } = null!;
 }

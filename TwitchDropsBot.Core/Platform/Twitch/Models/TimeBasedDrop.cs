@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using TwitchDropsBot.Core.Twitch.Models.Interfaces;
@@ -8,7 +8,7 @@ namespace TwitchDropsBot.Core.Platform.Twitch.Models;
 public partial class TimeBasedDrop
 {
     [JsonPropertyName("id")]
-    public string? Id { get; set; }
+    public required string Id { get; set; }
 
     [JsonPropertyName("requiredSubs")]
     public int RequiredSubs { get; set; }

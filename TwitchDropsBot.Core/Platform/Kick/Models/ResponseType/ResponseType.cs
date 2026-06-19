@@ -1,11 +1,11 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace TwitchDropsBot.Core.Platform.Kick.Models.ResponseType;
 
 public class ResponseType<TypeResponse>
 {
     [JsonPropertyName("data")]
-    public TypeResponse data { get; set; }
+    public TypeResponse data { get; set; } = default!;
     
     [JsonPropertyName("message")]
     public string? message { get; set; }

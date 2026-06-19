@@ -1,4 +1,4 @@
-﻿namespace TwitchDropsBot.Core.Platform.Shared.Exceptions;
+namespace TwitchDropsBot.Core.Platform.Shared.Exceptions;
 
 [Serializable]
 public class StreamOffline : System.Exception
@@ -9,11 +9,7 @@ public class StreamOffline : System.Exception
     public StreamOffline() : base(DefaultMessage) { }
     public StreamOffline(string message) : base(message) { }
     public StreamOffline(string message, System.Exception inner) : base(message, inner) { }
-    protected StreamOffline(System.Runtime.Serialization.SerializationInfo info,
-        System.Runtime.Serialization.StreamingContext context)
-        : base(info, context)
-    {
-    }
+
 }
 
 

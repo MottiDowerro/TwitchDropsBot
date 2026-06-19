@@ -1,4 +1,4 @@
-﻿using System.Net.WebSockets;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using Microsoft.Extensions.Logging;
@@ -15,7 +15,7 @@ public class WatchRequest : IKickWatchManager
 {
     private const string WEBSOCKET_CONNECTION_URL = "wss://websockets.kick.com/viewer/v1/connect";
 
-    private string _wssToken;
+    private string _wssToken = null!;
     private CancellationTokenSource _cancellationTokenSource;
     private ClientWebSocket _clientWebSocket;
     private readonly KickHttpRepository _kickHttpRepository;
@@ -34,7 +34,7 @@ public class WatchRequest : IKickWatchManager
         _logger.LogInformation("WatchRequest initialized");
     }
 
-    public KickUser BotUser { get; }
+    public KickUser BotUser { get; } = null!;
 
     public async Task WatchStreamAsync(Channel broadcaster, Category category)
     {

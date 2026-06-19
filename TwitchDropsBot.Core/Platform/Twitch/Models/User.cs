@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using TwitchDropsBot.Core.Platform.Twitch.Models;
 
 namespace TwitchDropsBot.Core.Platform.Twitch.Models;
@@ -55,31 +55,31 @@ public partial class User
 public class Badge
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
     
     [JsonPropertyName("setId")]
-    public string SetId { get; set; }
+    public string SetId { get; set; } = null!;
     
     [JsonPropertyName("version")]
-    public string Version { get; set; }
+    public string Version { get; set; } = null!;
     
     [JsonPropertyName("title")]
-    public string Title { get; set; }
+    public string Title { get; set; } = null!;
     
     [JsonPropertyName("image1x")]
-    public string Image1x { get; set; }
+    public string Image1x { get; set; } = null!;
     
     [JsonPropertyName("image2x")]
-    public string Image2x { get; set; }
+    public string Image2x { get; set; } = null!;
     
     [JsonPropertyName("image4x")]
-    public string Image4x { get; set; }
+    public string Image4x { get; set; } = null!;
 }
 
 public class Notifications
 {
     [JsonPropertyName("pageInfo")]
-    public PageInfo PageInfo { get; set; }
+    public PageInfo PageInfo { get; set; } = null!;
     
     [JsonPropertyName("edges")]
     public List<OnsiteNotificationEdge> Edges { get; set; } = new List<OnsiteNotificationEdge>();
@@ -95,22 +95,22 @@ public class PageInfo
 public class OnsiteNotificationEdge
 {
     [JsonPropertyName("node")]
-    public OnsiteNotification Node { get; set; }
+    public OnsiteNotification Node { get; set; } = null!;
 }
 
 public class OnsiteNotification
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
     
     [JsonPropertyName("type")]
-    public string Type { get; set; }
+    public string Type { get; set; } = null!;
     
     [JsonPropertyName("body")]
-    public string Body { get; set; }
+    public string Body { get; set; } = null!;
     
     [JsonPropertyName("renderStyle")]
-    public string RenderStyle { get; set; }
+    public string RenderStyle { get; set; } = null!;
     
     [JsonPropertyName("createdAt")]
     public DateTime? CreatedAt { get; set; }
@@ -122,22 +122,22 @@ public class OnsiteNotification
     public bool IsRead { get; set; }
     
     [JsonPropertyName("ThumbnailURL")]
-    public string ThumbnailUrl { get; set; }
+    public string ThumbnailUrl { get; set; } = null!;
     
     [JsonPropertyName("actions")]
     public List<OnsiteNotificationAction> Actions { get; set; } = new List<OnsiteNotificationAction>();
     
     [JsonPropertyName("displayType")]
-    public string DisplayType { get; set; }
+    public string DisplayType { get; set; } = null!;
     
     [JsonPropertyName("aggregationType")]
-    public string AggregationType { get; set; }
+    public string AggregationType { get; set; } = null!;
     
     [JsonPropertyName("collapseKey")]
-    public string CollapseKey { get; set; }
+    public string CollapseKey { get; set; } = null!;
     
     [JsonPropertyName("destinationType")]
-    public string DestinationType { get; set; }
+    public string DestinationType { get; set; } = null!;
     
     [JsonPropertyName("IsMobileOnly")]
     public bool IsMobileOnly { get; set; }
@@ -146,21 +146,21 @@ public class OnsiteNotification
 public class OnsiteNotificationAction
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
     
     [JsonPropertyName("label")]
-    public string Label { get; set; }
+    public string Label { get; set; } = null!;
     
     [JsonPropertyName("modalID")]
-    public string ModalID { get; set; }
+    public string ModalID { get; set; } = null!;
     
     [JsonPropertyName("body")]
-    public string Body { get; set; }
+    public string Body { get; set; } = null!;
     
     [JsonPropertyName("type")]
-    public string Type { get; set; }
+    public string Type { get; set; } = null!;
     
     [JsonPropertyName("url")]
-    public string Url { get; set; }
+    public string Url { get; set; } = null!;
 }
 
