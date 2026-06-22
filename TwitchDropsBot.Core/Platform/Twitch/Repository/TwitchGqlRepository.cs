@@ -251,9 +251,9 @@ public class TwitchGqlRepository : BotRepository<TwitchUser>
         dynamic? resp = await DoGQLRequestAsync(queries);
 
         List<User> users = new List<User>();
-        if (resp != null)
+        if (resp is JsonElement jsonResponse && jsonResponse.ValueKind != JsonValueKind.Null)
         {
-            foreach (var item in resp.EnumerateArray())
+            foreach (var item in jsonResponse.EnumerateArray())
             {
                 if (item.GetProperty("data").GetProperty("user").ValueKind != JsonValueKind.Null)
                 {
