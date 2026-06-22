@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TwitchDropsBot.Console.Platform;
@@ -31,9 +31,65 @@ public class Start
 
     public async Task StartAsync()
     {
+        if (args.Contains("--add-favourite") && args.Contains("--add-account"))
+        {
+            logger.LogError("Error: You cannot use both --add-favourite and --add-account flags at the same time. Please use only one.");
+            return;
+        }
+
+        HandleFavouriteAddition();
         await HandleAccountAdditionAsync();
         await EnsureUsersExistAsync();
         await StartBotsAsync();
+    }
+
+    private void HandleFavouriteAddition()
+    {
+        if (args.Length == 0 || !args.Contains("--add-favourite"))
+            return;
+
+        var settings = settingsManager.Read();
+        settings.FavouriteGames ??= new List<string>();
+
+        logger.LogInformation("Current global favorite games:");
+        if (settings.FavouriteGames.Count > 0)
+        {
+            for (int i = 0; i < settings.FavouriteGames.Count; i++)
+            {
+                logger.LogInformation($"{i + 1}. {settings.FavouriteGames[i]}");
+            }
+        }
+        else
+        {
+            logger.LogInformation("  (None)");
+        }
+
+        while (true)
+        {
+            logger.LogInformation("Enter the name of the favorite game (or 0 to exit and save):");
+            var input = UserInput.ReadInput();
+            if (input != null)
+            {
+                var trimmed = input.Trim();
+                if (trimmed == "0")
+                {
+                    break;
+                }
+                
+                if (!string.IsNullOrEmpty(trimmed) && !settings.FavouriteGames.Contains(trimmed))
+                {
+                    settings.FavouriteGames.Add(trimmed);
+                    logger.LogInformation($"Game '{trimmed}' added.");
+                }
+                else if (settings.FavouriteGames.Contains(trimmed))
+                {
+                    logger.LogInformation($"Game '{trimmed}' is already in favorites.");
+                }
+            }
+        }
+        
+        settingsManager.Save(settings);
+        logger.LogInformation("Favorite games saved to config.");
     }
 
     private async Task HandleAccountAdditionAsync()
@@ -104,7 +160,7 @@ public class Start
         var addAccountEnv = Environment.GetEnvironmentVariable("ADD_ACCOUNT");
         var mustAddAccount = addAccountEnv is not null && addAccountEnv.ToLower() == "true";
         
-        return mustAddAccount || (args.Length > 0 && args[0] == "--add-account");
+        return mustAddAccount || args.Contains("--add-account");
     }
 
     private static bool HasNoUsers(BotSettings settings)
